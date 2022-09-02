@@ -41,5 +41,8 @@ public class AddressBook {
 		contact.setPhoneNumber(phoneNumber);
 		contact.setEmail(email);
 	}
-
+	
+	public void deleteContact(int index) {
+		contacts.remove(index);
+	}
 }
