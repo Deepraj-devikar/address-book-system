@@ -20,5 +20,26 @@ public class AddressBook {
 			System.out.println("");
 		});
 	}
+	
+	public int indexOfContact(String firstName, String lastName) {
+		for(int index = 0; index < contacts.size(); index++) {
+			Person cantact = contacts.get(index);
+			if (cantact.getFirstName().equals(firstName) && cantact.getLastName().equals(lastName))
+				return index;
+		}
+		return -1;
+	}
+	
+	public void editContact(int index, String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
+		Person contact = contacts.get(index);
+		contact.setFirstName(firstName);
+		contact.setLastName(lastName);
+		contact.setAddress(address);
+		contact.setCity(city);
+		contact.setState(state);
+		contact.setZip(zip);
+		contact.setPhoneNumber(phoneNumber);
+		contact.setEmail(email);
+	}
 
 }
