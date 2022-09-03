@@ -5,6 +5,17 @@ import java.util.ArrayList;
 public class AddressBook {
 	public ArrayList<Person> contacts = new ArrayList<Person>();
 	
+	/**
+	 * 
+	 * @param firstName
+	 * @param lastName
+	 * @param address
+	 * @param city
+	 * @param state
+	 * @param zip
+	 * @param phoneNumber
+	 * @param email
+	 */
 	public void addContact(String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
 		contacts.add(new Person(firstName, lastName, address, city, state, zip, phoneNumber, email));
 	}
@@ -12,15 +23,21 @@ public class AddressBook {
 	public void showContacts() {
 		contacts.forEach((contact) -> {
 			System.out.println("");
-			System.out.println(contact.firstName+" "+contact.lastName+" : ");
-			System.out.println(contact.address+", ");
-			System.out.println(contact.city+", "+contact.state+" - "+contact.zip);
-			System.out.println(contact.phoneNumber);
-			System.out.println(contact.email);
+			System.out.println(contact.getFirstName()+" "+contact.getLastName()+" : ");
+			System.out.println(contact.getAddress()+", ");
+			System.out.println(contact.getCity()+", "+contact.getState()+" - "+contact.getZip());
+			System.out.println(contact.getPhoneNumber());
+			System.out.println(contact.getEmail());
 			System.out.println("");
 		});
 	}
 	
+	/**
+	 * 
+	 * @param firstName
+	 * @param lastName
+	 * @return index if found otherwise -1
+	 */
 	public int indexOfContact(String firstName, String lastName) {
 		for(int index = 0; index < contacts.size(); index++) {
 			Person cantact = contacts.get(index);
@@ -30,6 +47,18 @@ public class AddressBook {
 		return -1;
 	}
 	
+	/**
+	 * 
+	 * @param index
+	 * @param firstName
+	 * @param lastName
+	 * @param address
+	 * @param city
+	 * @param state
+	 * @param zip
+	 * @param phoneNumber
+	 * @param email
+	 */
 	public void editContact(int index, String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
 		Person contact = contacts.get(index);
 		contact.setFirstName(firstName);
@@ -42,6 +71,10 @@ public class AddressBook {
 		contact.setEmail(email);
 	}
 	
+	/**
+	 * 
+	 * @param index
+	 */
 	public void deleteContact(int index) {
 		contacts.remove(index);
 	}

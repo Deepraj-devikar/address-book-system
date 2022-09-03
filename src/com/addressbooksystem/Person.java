@@ -1,15 +1,19 @@
 package com.addressbooksystem;
 
 public class Person {
-	String firstName;
-	String lastName;
-	String address;
-	String city;
-	String state;
-	String zip;
-	String phoneNumber;
-	String email;
+	private String firstName, lastName, address, city, state, zip, phoneNumber, email;
 	
+	/**
+	 * 
+	 * @param firstName
+	 * @param lastName
+	 * @param address
+	 * @param city
+	 * @param state
+	 * @param zip
+	 * @param phoneNumber
+	 * @param email
+	 */
 	Person(String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -84,7 +88,5 @@ public class Person {
 	public void setEmail(String email) {
 		if (email != "") this.email = email;
 	}
-	
-	
 	
 }
