@@ -34,10 +34,13 @@ public class AddressBookMain {
 		
 		AddressBook addressBook = new AddressBook();
 		int indexInContact;
-		System.out.println("Enter 4 person details: ");
-		for (int number = 1; number <= 2; number++) {
+		System.out.print("How many persons details you have to add : ");
+		int numberOfPerson = scanner.nextInt();
+		System.out.println("Enter "+numberOfPerson+" person details: ");
+		for (int number = 1; number <= numberOfPerson; number++) {
 			System.out.println("");
 			System.out.println("Person "+number+" : ");
+			if (number == 1) scanner.nextLine();
 			readContactDetails();
 			addressBook.addContact(firstName, lastName, address, city, state, zip, phoneNumber, eamil);	
 		}
