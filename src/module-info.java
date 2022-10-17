@@ -1,2 +1,3 @@
 module AddressBookSystem {
+	requires junit;
 }

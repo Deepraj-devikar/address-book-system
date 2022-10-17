@@ -7,22 +7,16 @@ public class Person {
 	 * 
 	 * @param firstName
 	 * @param lastName
-	 * @param address
-	 * @param city
-	 * @param state
-	 * @param zip
-	 * @param phoneNumber
-	 * @param email
 	 */
-	Person(String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
+	public Person(String firstName, String lastName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.address = address;
-		this.city = city;
-		this.state = state;
-		this.zip = zip;
-		this.phoneNumber = phoneNumber;
-		this.email = email;
+		this.address = "";
+		this.city = "";
+		this.state = "";
+		this.zip = "";
+		this.phoneNumber = "";
+		this.email = "";
 	}
 
 	public String getFirstName() {
@@ -89,4 +83,13 @@ public class Person {
 		if (email != "") this.email = email;
 	}
 	
+	@Override
+	public boolean equals(Object person) {
+		if(person instanceof Person) {
+			Person newPerson = (Person) person;
+			return this.firstName == newPerson.firstName && this.lastName == newPerson.lastName;
+		} else {
+			return false;
+		}
+	}
 }

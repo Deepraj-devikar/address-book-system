@@ -7,7 +7,7 @@ public class AddressBookMain {
 	static Scanner scanner = new Scanner(System.in);
 	
 	// Contact details holding variables
-	static String firstName, lastName, address, city, state, zip, phoneNumber, eamil;
+	static String firstName, lastName, address, city, state, zip, phoneNumber, email;
 	
 	public static void readPersonDetails() {
 		System.out.print("First Name : ");
@@ -29,7 +29,7 @@ public class AddressBookMain {
 		System.out.print("Phone Number : ");
 		phoneNumber = scanner.nextLine();
 		System.out.print("Email : ");
-		eamil = scanner.nextLine();
+		email = scanner.nextLine();
 	}
 	
 	public static void main(String[] args) {
@@ -66,7 +66,20 @@ public class AddressBookMain {
 				System.out.println("Person "+number+" : ");
 				// Read contact details with person first name and last name and add that details to address book
 				readContactDetails();
-				addressBooks.get(addressBookName).addContact(firstName, lastName, address, city, state, zip, phoneNumber, eamil);	
+				try {
+					// add contact details to the address book 
+					// if contact details with first name and last name is already found in address book 
+					// then it will give DuplicateContactException
+					Person addContact = addressBooks.get(addressBookName).addContact(firstName, lastName);
+					addContact.setAddress(address);
+					addContact.setCity(city);
+					addContact.setState(state);
+					addContact.setZip(zip);
+					addContact.setPhoneNumber(phoneNumber);
+					addContact.setEmail(email);
+				} catch (DuplicateContactException e) {
+					System.out.println(e);
+				}	
 			}
 			
 			// Show all contacts that current address book currently having
@@ -77,15 +90,18 @@ public class AddressBookMain {
 			System.out.println("Enter first name and last name which have to edit contact :");
 			// Read person first name and last name
 			readPersonDetails();
-			// Get index number of that person contact in address book contacts list if person contact not found then will return -1
-			indexInContact = addressBooks.get(addressBookName).indexOfContact(firstName, lastName);
-			if (indexInContact != -1) {
-				System.out.println("Contact exists you can edit");
-				// Read contact details with person first name and last name and edit that details in address book
-				readContactDetails();
-				addressBooks.get(addressBookName).editContact(indexInContact, firstName, lastName, address, city, state, zip, phoneNumber, address);
-			} else {
-				System.out.println("Contact not exists you can not edit");
+			// Read contact details with person first name and last name and edit that details in address book
+			readContactDetails();
+			// edit persons contact details this function can give ContactNotFoundException if persons contact details not found in address book
+			Person editContact = addressBooks.get(addressBookName).getContact(firstName, lastName);
+			if(editContact != null) {
+				editContact.setAddress(address);
+				editContact.setCity(city);
+				editContact.setState(state);
+				editContact.setZip(zip);
+				editContact.setPhoneNumber(phoneNumber);
+				editContact.setEmail(email);
+				System.out.println("Contact details edited");
 			}
 			
 			// Show all contacts that current address book currently having
@@ -96,15 +112,8 @@ public class AddressBookMain {
 			System.out.println("Enter first name and last name which have to delete contact :");
 			// Read person first name and last name
 			readPersonDetails();
-			// Get index number of that person contact in address book contacts list if person contact not found then will return -1
-			indexInContact = addressBooks.get(addressBookName).indexOfContact(firstName, lastName);
-			if (indexInContact != -1) {
-				System.out.println("Contact found and deleted now");
-				// Delete that details in address book
-				addressBooks.get(addressBookName).deleteContact(indexInContact);
-			} else {
-				System.out.println("Contact not found so can not delete");
-			}
+			// Delete that details in address book
+			addressBooks.get(addressBookName).deleteContact(firstName, lastName);
 			
 			// Show all contacts that current address book currently having
 			addressBooks.get(addressBookName).showContacts();

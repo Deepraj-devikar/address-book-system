@@ -6,18 +6,22 @@ public class AddressBook {
 	public ArrayList<Person> contacts = new ArrayList<Person>();
 	
 	/**
+	 * add contact to contacts of address book with first name and last name
+	 * and return that contact which type is person to set further information
 	 * 
 	 * @param firstName
 	 * @param lastName
-	 * @param address
-	 * @param city
-	 * @param state
-	 * @param zip
-	 * @param phoneNumber
-	 * @param email
+	 * @return contact
+	 * @throws DuplicateContactException
 	 */
-	public void addContact(String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
-		contacts.add(new Person(firstName, lastName, address, city, state, zip, phoneNumber, email));
+	public Person addContact(String firstName, String lastName) throws DuplicateContactException{
+		Person person = new Person(firstName, lastName);
+		if(! contacts.stream().anyMatch((tempPerson) -> person.equals(tempPerson))) {
+			contacts.add(person);
+			return person;
+		} else {
+			throw new DuplicateContactException(firstName, lastName);
+		}
 	}
 	
 	public void showContacts() {
@@ -48,34 +52,30 @@ public class AddressBook {
 	}
 	
 	/**
+	 * get the contact with first name and last name and return it
 	 * 
-	 * @param index
 	 * @param firstName
 	 * @param lastName
-	 * @param address
-	 * @param city
-	 * @param state
-	 * @param zip
-	 * @param phoneNumber
-	 * @param email
+	 * @return contact
 	 */
-	public void editContact(int index, String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
-		Person contact = contacts.get(index);
-		contact.setFirstName(firstName);
-		contact.setLastName(lastName);
-		contact.setAddress(address);
-		contact.setCity(city);
-		contact.setState(state);
-		contact.setZip(zip);
-		contact.setPhoneNumber(phoneNumber);
-		contact.setEmail(email);
+	public Person getContact(String firstName, String lastName) {
+		int index = indexOfContact(firstName, lastName);
+		if(index == -1) {
+			return null;
+		}
+		return contacts.get(index);
 	}
 	
 	/**
+	 * delete contact with first name and last name if contact found
 	 * 
-	 * @param index
+	 * @param firstName
+	 * @param lastName
 	 */
-	public void deleteContact(int index) {
-		contacts.remove(index);
+	public void deleteContact(String firstName, String lastName) {
+		Person contact = getContact(firstName, lastName);
+		if(contact != null) {
+			contacts.remove(contact);
+		}
 	}
 }
