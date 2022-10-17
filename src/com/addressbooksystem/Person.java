@@ -87,7 +87,7 @@ public class Person {
 	public boolean equals(Object person) {
 		if(person instanceof Person) {
 			Person newPerson = (Person) person;
-			return this.firstName == newPerson.firstName && this.lastName == newPerson.lastName;
+			return this.firstName.equals(newPerson.firstName) && this.lastName.equals(newPerson.lastName);
 		} else {
 			return false;
 		}

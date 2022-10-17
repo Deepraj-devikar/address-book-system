@@ -60,7 +60,7 @@ public class PersonTest {
 	@Parameterized.Parameters
 	public static Collection<String[]> testPerson() {
 		return Arrays.asList(new String[][] {
-			{"abc", "def", "a", "a", "a", "a", "a", "a", "abc", "def", "", "", "b", "b", "b", "b", "abc", "def", "a", "a", "b", "b", "b", "b"}
+			{"abc", "def", "a", "a", "a", "a", "a", "a", "abc", "def", "", "", "b", "b", "b", "b", "abc", "def", "a", "a", "b", "b", "b", "b"},
 		});
 	}
 	

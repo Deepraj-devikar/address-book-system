@@ -17,7 +17,6 @@ public class AddressBookMain {
 	}
 	
 	public static void readContactDetails() {
-		readPersonDetails();
 		System.out.print("Address : ");
 		address = scanner.nextLine();
 		System.out.print("City : ");
@@ -37,9 +36,6 @@ public class AddressBookMain {
 		
 		// For more than one address book according to address book name
 		Dictionary<String, AddressBook> addressBooks = new Hashtable<String, AddressBook>();
-
-		// For reading index of specific contact in contacts list
-		int indexInContact;
 		
 		boolean isFirstAddressBook = true;
 		while (true) {
@@ -65,12 +61,13 @@ public class AddressBookMain {
 				System.out.println("");
 				System.out.println("Person "+number+" : ");
 				// Read contact details with person first name and last name and add that details to address book
-				readContactDetails();
 				try {
 					// add contact details to the address book 
 					// if contact details with first name and last name is already found in address book 
 					// then it will give DuplicateContactException
+					readPersonDetails();
 					Person addContact = addressBooks.get(addressBookName).addContact(firstName, lastName);
+					readContactDetails();
 					addContact.setAddress(address);
 					addContact.setCity(city);
 					addContact.setState(state);
@@ -91,10 +88,10 @@ public class AddressBookMain {
 			// Read person first name and last name
 			readPersonDetails();
 			// Read contact details with person first name and last name and edit that details in address book
-			readContactDetails();
-			// edit persons contact details this function can give ContactNotFoundException if persons contact details not found in address book
 			Person editContact = addressBooks.get(addressBookName).getContact(firstName, lastName);
 			if(editContact != null) {
+				readContactDetails();
+				// edit persons contact details this function can give ContactNotFoundException if persons contact details not found in address book
 				editContact.setAddress(address);
 				editContact.setCity(city);
 				editContact.setState(state);
@@ -102,6 +99,8 @@ public class AddressBookMain {
 				editContact.setPhoneNumber(phoneNumber);
 				editContact.setEmail(email);
 				System.out.println("Contact details edited");
+			} else {
+				System.out.println("Contact detail not found");
 			}
 			
 			// Show all contacts that current address book currently having
