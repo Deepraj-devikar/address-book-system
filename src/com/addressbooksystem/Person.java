@@ -92,4 +92,13 @@ public class Person {
 			return false;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return "\n"+getFirstName()+" "+getLastName()+" : \n"
+				+getAddress()+", \n"
+				+getCity()+", "+getState()+" - "+getZip()+"\n"
+				+getPhoneNumber()+"\n"
+				+getEmail()+"\n\n";
+	}
 }

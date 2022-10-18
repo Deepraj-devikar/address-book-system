@@ -26,13 +26,7 @@ public class AddressBook {
 	
 	public void showContacts() {
 		contacts.forEach((contact) -> {
-			System.out.println("");
-			System.out.println(contact.getFirstName()+" "+contact.getLastName()+" : ");
-			System.out.println(contact.getAddress()+", ");
-			System.out.println(contact.getCity()+", "+contact.getState()+" - "+contact.getZip());
-			System.out.println(contact.getPhoneNumber());
-			System.out.println(contact.getEmail());
-			System.out.println("");
+			System.out.println(contact);
 		});
 	}
 	

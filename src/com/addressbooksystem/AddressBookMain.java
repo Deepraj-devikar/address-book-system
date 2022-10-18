@@ -1,6 +1,7 @@
 package com.addressbooksystem;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AddressBookMain {
 	// For taking inputs from console
@@ -184,8 +185,24 @@ public class AddressBookMain {
 		System.out.print("Enter name for address book : ");
 		String addressBookName = scanner.nextLine();
 		addressBooks.put(addressBookName, new AddressBook());
-//		System.out.println("MY CHECK : "+addressBookName);
 		addAddressesToAddressBook(addressBookName);
+	}
+	
+	public void searchPersonInCityOrState() {
+		System.out.println("");
+		System.out.println("Search person in city or state : ");
+		System.out.println("Enter city name or state name : ");
+		String cityOrState = scanner.nextLine();
+		ArrayList<Person> searchedPersons = new ArrayList<Person>();
+		addressBooks.forEach((addressBookName, addressBook) -> {
+			searchedPersons.addAll(addressBook
+					.contacts
+					.stream()
+					.filter((person) -> person.getCity().equals(cityOrState) || person.getState().equals(cityOrState))
+					.collect(Collectors.toList())
+			);
+		});
+		System.out.println(searchedPersons);
 	}
 	
 	public void chooseOperation() {
@@ -195,9 +212,10 @@ public class AddressBookMain {
 			System.out.println("\t 2) Add contacts to any address book");
 			System.out.println("\t 3) Edit contacts of any address book");
 			System.out.println("\t 4) Delete contacts from any address book");
-			System.out.println("\t 5) Show all contacts");
-			System.out.println("\t 6) Show contacts of any address book");
-			System.out.println("\t 7) Stop");
+			System.out.println("\t 5) Search contact in city or state");
+			System.out.println("\t 6) Show all contacts");
+			System.out.println("\t 7) Show contacts of any address book");
+			System.out.println("\t 8) Stop");
 			switch(readNumber()) {
 			case 1:
 				addAddressBook();
@@ -212,15 +230,18 @@ public class AddressBookMain {
 				deleteAddressFromAddressBook(selectAddressBook());
 				break;
 			case 5:
+				searchPersonInCityOrState();
+				break;
+			case 6:
 				String addressBookNames[] = getAddressBookNames();
 				for (String addressBookName : addressBookNames) {
 					showAddressOfAddressBook(addressBookName);
 				}
 				break;
-			case 6:
+			case 7:
 				showAddressOfAddressBook(selectAddressBook());
 				break;
-			case 7:
+			case 8:
 				return;
 			default:
 				System.out.println("Incorrect option entered : ");
