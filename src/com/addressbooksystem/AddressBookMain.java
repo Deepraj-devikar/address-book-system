@@ -116,6 +116,15 @@ public class AddressBookMain {
 		}
 	}
 	
+	public ArrayList<Person> getPersonsListByAreaName(Hashtable<String, ArrayList<Person>> personsInArea, String areaName) {
+		return personsInArea.entrySet()
+				.stream()
+				.filter(entry -> entry.getKey().equals(areaName))
+				.findFirst()
+				.get()
+				.getValue();
+	}
+	
 	/**
 	 * set address details of person contact given
 	 * @param contact
@@ -123,9 +132,31 @@ public class AddressBookMain {
 	public void setAddressDetails(Person contact) {
 		readAddressDetails();
 		contact.setAddress(address);
+		String previousCity = contact.getCity();
 		contact.setCity(city);
+		String previousState = contact.getState();
 		contact.setState(state);
 		contact.setZip(zip);
+		if(! previousCity.equalsIgnoreCase(contact.getCity())) {
+			if(! previousCity.isBlank()) {
+				ArrayList<Person> previousCityPersons = getPersonsListByAreaName(personsInCity, previousCity);
+				previousCityPersons.remove(contact);
+			}
+			if(! personsInCity.containsKey(contact.getCity())) {
+				personsInCity.put(contact.getCity(), new ArrayList<Person>());
+			}
+			getPersonsListByAreaName(personsInCity, contact.getCity()).add(contact);
+		}
+		if(! previousState.equalsIgnoreCase(contact.getState())) {
+			if(! previousState.isBlank()) {
+				ArrayList<Person> previousStatePersons = getPersonsListByAreaName(personsInState, previousState);
+				previousStatePersons.remove(contact);	
+			}
+			if(! personsInState.containsKey(contact.getState())) {
+				personsInState.put(contact.getState(), new ArrayList<Person>());
+			}
+			getPersonsListByAreaName(personsInState, contact.getState()).add(contact);
+		}
 	}
 	
 	/**
@@ -229,6 +260,40 @@ public class AddressBookMain {
 		addressBooks.get(addressBookName).showContacts();
 	}
 	
+	public void showContact(Hashtable<String, ArrayList<Person>> personsInArea) {
+		personsInArea.entrySet()
+		.stream()
+		.forEach(entry -> {
+			System.out.println(entry.getKey()+" : "+entry.getValue()+"\n");
+		});
+	}
+	
+	public void view() {
+		boolean isShown = true;
+		System.out.println("Show contacts according to : ");
+		System.out.println("\t 1) Address book");
+		System.out.println("\t 2) City");
+		System.out.println("\t 3) State");
+		System.out.println("\t *) Any other number if not have to show");
+		switch(readNumber()) {
+		case 1:
+			String addressBookNames[] = getAddressBookNames();
+			for (String addressBookName : addressBookNames) {
+				showAddressOfAddressBook(addressBookName);
+			}
+			break;
+		case 2:
+			showContact(personsInCity);
+			break;
+		case 3:
+			showContact(personsInState);
+			break;
+		default:
+			isShown = false;
+		}
+		System.out.println("Contact details "+(isShown ? "" : "not ")+"shown");
+	}
+	
 	/**
 	 * show options to user and ask which address book have to select 
 	 * @return address book name which is selected
@@ -310,10 +375,7 @@ public class AddressBookMain {
 				System.out.println(searchPersonInCityOrState());
 				break;
 			case 6:
-				String addressBookNames[] = getAddressBookNames();
-				for (String addressBookName : addressBookNames) {
-					showAddressOfAddressBook(addressBookName);
-				}
+				view();
 				break;
 			case 7:
 				showAddressOfAddressBook(selectAddressBook());
