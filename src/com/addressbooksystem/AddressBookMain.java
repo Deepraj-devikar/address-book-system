@@ -188,7 +188,14 @@ public class AddressBookMain {
 		addAddressesToAddressBook(addressBookName);
 	}
 	
-	public void searchPersonInCityOrState() {
+	/**
+	 * get input from user city or state
+	 * search persons who is resident of city or state across all address books
+	 * make list of those persons and return that list
+	 * 
+	 * @return persons list who is resident of city or state
+	 */
+	public ArrayList<Person> searchPersonInCityOrState() {
 		System.out.println("");
 		System.out.println("Search person in city or state : ");
 		System.out.println("Enter city name or state name : ");
@@ -202,7 +209,7 @@ public class AddressBookMain {
 					.collect(Collectors.toList())
 			);
 		});
-		System.out.println(searchedPersons);
+		return searchedPersons;
 	}
 	
 	public void chooseOperation() {
@@ -230,7 +237,7 @@ public class AddressBookMain {
 				deleteAddressFromAddressBook(selectAddressBook());
 				break;
 			case 5:
-				searchPersonInCityOrState();
+				System.out.println(searchPersonInCityOrState());
 				break;
 			case 6:
 				String addressBookNames[] = getAddressBookNames();
