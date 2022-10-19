@@ -232,6 +232,7 @@ public class AddressBookMain {
 		System.out.println("\t 3) Phone number");
 		System.out.println("\t 4) Email");
 		System.out.println("\t *) Any other number if not have to edit");
+		System.out.print("Enter your edit option here : ");
 		return readNumber();
 	}
 	
@@ -264,7 +265,7 @@ public class AddressBookMain {
 		personsInArea.entrySet()
 		.stream()
 		.forEach(entry -> {
-			System.out.println(entry.getKey()+" : "+entry.getValue()+"\n");
+			System.out.println(entry.getKey()+" has "+entry.getValue().size()+" persons : "+entry.getValue()+"\n");
 		});
 	}
 	
@@ -275,6 +276,7 @@ public class AddressBookMain {
 		System.out.println("\t 2) City");
 		System.out.println("\t 3) State");
 		System.out.println("\t *) Any other number if not have to show");
+		System.out.print("Enter your view option here : ");
 		switch(readNumber()) {
 		case 1:
 			String addressBookNames[] = getAddressBookNames();
@@ -330,11 +332,7 @@ public class AddressBookMain {
 	 * 
 	 * @return persons list who is resident of city or state
 	 */
-	public ArrayList<Person> searchPersonInCityOrState() {
-		System.out.println("");
-		System.out.println("Search person in city or state : ");
-		System.out.println("Enter city name or state name : ");
-		String cityOrState = scanner.nextLine();
+	public ArrayList<Person> searchPersonInCityOrState(String cityOrState) {
 		ArrayList<Person> searchedPersons = new ArrayList<Person>();
 		addressBooks.forEach((addressBookName, addressBook) -> {
 			searchedPersons.addAll(addressBook
@@ -358,6 +356,7 @@ public class AddressBookMain {
 			System.out.println("\t 6) Show all contacts");
 			System.out.println("\t 7) Show contacts of any address book");
 			System.out.println("\t 8) Stop");
+			System.out.print("Enter your option here : ");
 			switch(readNumber()) {
 			case 1:
 				addAddressBook();
@@ -372,7 +371,12 @@ public class AddressBookMain {
 				deleteAddressFromAddressBook(selectAddressBook());
 				break;
 			case 5:
-				System.out.println(searchPersonInCityOrState());
+				System.out.println("");
+				System.out.println("Search person in city or state : ");
+				System.out.println("Enter city name or state name : ");
+				String cityOrState = scanner.nextLine();
+				ArrayList<Person> personInCityOrState = searchPersonInCityOrState(cityOrState);
+				System.out.println(cityOrState+" has "+personInCityOrState.size()+" persons : "+personInCityOrState);
 				break;
 			case 6:
 				view();
