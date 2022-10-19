@@ -10,6 +10,12 @@ public class AddressBookMain {
 	// For more than one address book according to address book name
 	Hashtable<String, AddressBook> addressBooks = new Hashtable<String, AddressBook>();
 	
+	// For city and persons in that city
+	Hashtable<String, ArrayList<Person>> personsInCity = new Hashtable<String, ArrayList<Person>>();
+	
+	// For state and persons in that state
+	Hashtable<String, ArrayList<Person>> personsInState = new Hashtable<String, ArrayList<Person>>();
+	
 	// Contact details holding variables
 	String firstName, lastName, address, city, state, zip, phoneNumber, email;
 	
@@ -24,9 +30,9 @@ public class AddressBookMain {
 	}
 	
 	/*
-	 * address, city, state, zip, phone number, email
+	 * address, city, state, zip
 	 */
-	public void readContactDetails() {
+	public void readAddressDetails() {
 		System.out.print("Address : ");
 		address = scanner.nextLine();
 		System.out.print("City : ");
@@ -35,8 +41,20 @@ public class AddressBookMain {
 		state = scanner.nextLine();
 		System.out.print("Zip : ");
 		zip = scanner.nextLine();
+	}
+	
+	/*
+	 * phone number
+	 */
+	public void readPhoneNumber() {
 		System.out.print("Phone Number : ");
 		phoneNumber = scanner.nextLine();
+	}
+	
+	/*
+	 * email
+	 */
+	public void readEmail() {
 		System.out.print("Email : ");
 		email = scanner.nextLine();
 	}
@@ -99,17 +117,43 @@ public class AddressBookMain {
 	}
 	
 	/**
-	 * set contact details of persons contact given
+	 * set address details of person contact given
 	 * @param contact
 	 */
-	public void setContactDetails(Person contact) {
-		readContactDetails();
+	public void setAddressDetails(Person contact) {
+		readAddressDetails();
 		contact.setAddress(address);
 		contact.setCity(city);
 		contact.setState(state);
 		contact.setZip(zip);
+	}
+	
+	/**
+	 * set phone number of person contact given
+	 * @param contact
+	 */
+	public void setPhoneNumber(Person contact) {
+		readPhoneNumber();
 		contact.setPhoneNumber(phoneNumber);
+	}
+	
+	/**
+	 * set email of person contact given
+	 * @param contact
+	 */
+	public void setEmail(Person contact) {
+		readEmail();
 		contact.setEmail(email);
+	}
+	
+	/**
+	 * set contact details of person contact given
+	 * @param contact
+	 */
+	public void setContactDetails(Person contact) {
+		setAddressDetails(contact);
+		setPhoneNumber(contact);
+		setEmail(contact);
 	}
 	
 	/**
@@ -127,11 +171,37 @@ public class AddressBookMain {
 		Person editContact = addressBooks.get(addressBookName).getContact(firstName, lastName);
 		if(editContact != null) {
 			// edit persons contact details this function can give ContactNotFoundException if persons contact details not found in address book
-			setContactDetails(editContact);
-			System.out.println("Contact details edited");
+			boolean isEdited = true;
+			switch(editOption()) {
+			case 1:
+				setContactDetails(editContact);
+				break;
+			case 2:
+				setAddressDetails(editContact);
+				break;
+			case 3:
+				setPhoneNumber(editContact);
+				break;
+			case 4:
+				setEmail(editContact);
+				break;
+			default:
+				isEdited = false;
+			}
+			System.out.println("Contact details "+(isEdited ? "" : "not ")+"edited");
 		} else {
 			System.out.println("Contact detail not found");
 		}
+	}
+	
+	public int editOption() {
+		System.out.println("Choose edit option : ");
+		System.out.println("\t 1) All contact details");
+		System.out.println("\t 2) Address Details");
+		System.out.println("\t 3) Phone number");
+		System.out.println("\t 4) Email");
+		System.out.println("\t *) Any other number if not have to edit");
+		return readNumber();
 	}
 	
 	/**
