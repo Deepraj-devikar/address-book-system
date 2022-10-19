@@ -93,6 +93,10 @@ public class Person {
 		}
 	}
 	
+	public int compareToByName(Person anotherPerson) {
+		return (firstName+" "+lastName).compareToIgnoreCase(anotherPerson.firstName+" "+anotherPerson.lastName);
+	}
+	
 	@Override
 	public String toString() {
 		return "\n"+getFirstName()+" "+getLastName()+" : \n"

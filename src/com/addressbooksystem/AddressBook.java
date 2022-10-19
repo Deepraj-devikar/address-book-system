@@ -1,6 +1,7 @@
 package com.addressbooksystem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AddressBook {
 	public ArrayList<Person> contacts = new ArrayList<Person>();
@@ -25,6 +26,7 @@ public class AddressBook {
 	}
 	
 	public void showContacts() {
+		Collections.sort(contacts, new SortPersonsByName());
 		contacts.forEach((contact) -> {
 			System.out.println(contact);
 		});

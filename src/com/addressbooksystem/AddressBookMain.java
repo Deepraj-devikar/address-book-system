@@ -265,7 +265,11 @@ public class AddressBookMain {
 		personsInArea.entrySet()
 		.stream()
 		.forEach(entry -> {
-			System.out.println(entry.getKey()+" has "+entry.getValue().size()+" persons : "+entry.getValue()+"\n");
+			System.out.println(entry.getKey()+" has "+entry.getValue().size()+" persons : ");
+			entry.getValue()
+			.sort(new SortPersonsByName());
+			entry.getValue()
+			.forEach(System.out::println);
 		});
 	}
 	
