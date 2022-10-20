@@ -24,9 +24,24 @@ public class AddressBook {
 			throw new DuplicateContactException(firstName, lastName);
 		}
 	}
-	
 	public void showContacts() {
-		Collections.sort(contacts, new SortPersonsByName());
+		showContacts(SortOption.NAME);
+	}
+	
+	public void showContacts(SortOption sortOption) {
+		switch(sortOption) {
+		case CITY:
+			Collections.sort(contacts, new SortPersonsByCity());
+			break;
+		case STATE:
+			Collections.sort(contacts, new SortPersonsByState());
+			break;
+		case ZIP:
+			Collections.sort(contacts, new SortPersonsByZip());
+			break;
+		default:
+			Collections.sort(contacts, new SortPersonsByName());
+		}
 		contacts.forEach((contact) -> {
 			System.out.println(contact);
 		});

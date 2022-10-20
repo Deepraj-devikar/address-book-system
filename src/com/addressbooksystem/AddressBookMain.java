@@ -251,6 +251,16 @@ public class AddressBookMain {
 		addressBooks.get(addressBookName).deleteContact(firstName, lastName);
 	}
 	
+	public int sortOption() {
+		System.out.println("Sort contacts according to : ");
+		System.out.println("\t 1) "+SortOption.NAME);
+		System.out.println("\t 2) "+SortOption.CITY);
+		System.out.println("\t 3) "+SortOption.STATE);
+		System.out.println("\t 4) "+SortOption.ZIP);
+		System.out.println("\t *) Any other number will sort according to "+SortOption.NAME);
+		return readNumber();
+	}
+	
 	/**
 	 * show all contacts of address book which name is given as parameter
 	 * @param addressBookName
@@ -258,16 +268,33 @@ public class AddressBookMain {
 	public void showAddressOfAddressBook(String addressBookName) {
 		// Show all contacts that current address book currently having
 		System.out.println("Addresess from "+addressBookName+" address book : ");
-		addressBooks.get(addressBookName).showContacts();
+		int gotSortOption = sortOption();
+		addressBooks.get(addressBookName)
+		.showContacts(1 <= gotSortOption && gotSortOption <= 4 ? SortOption.values()[gotSortOption - 1] : SortOption.NAME);
 	}
 	
 	public void showContact(Hashtable<String, ArrayList<Person>> personsInArea) {
+		int gotSortOption = sortOption();
 		personsInArea.entrySet()
 		.stream()
 		.forEach(entry -> {
 			System.out.println(entry.getKey()+" has "+entry.getValue().size()+" persons : ");
-			entry.getValue()
-			.sort(new SortPersonsByName());
+			switch(gotSortOption) {
+			case 1:
+				entry.getValue().sort(new SortPersonsByName());
+				break;
+			case 2:
+				entry.getValue().sort(new SortPersonsByCity());
+				break;
+			case 3:
+				entry.getValue().sort(new SortPersonsByState());
+				break;
+			case 4:
+				entry.getValue().sort(new SortPersonsByZip());
+				break;
+			default:
+				entry.getValue().sort(new SortPersonsByName());
+			}
 			entry.getValue()
 			.forEach(System.out::println);
 		});

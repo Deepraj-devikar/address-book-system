@@ -97,6 +97,18 @@ public class Person {
 		return (firstName+" "+lastName).compareToIgnoreCase(anotherPerson.firstName+" "+anotherPerson.lastName);
 	}
 	
+	public int compareToByCity(Person anotherPerson) {
+		return city.compareToIgnoreCase(anotherPerson.city);
+	}
+	
+	public int compareToByState(Person anotherPerson) {
+		return state.compareToIgnoreCase(anotherPerson.state);
+	}
+	
+	public int compareToByZip(Person anotherPerson) {
+		return zip.compareToIgnoreCase(anotherPerson.zip);
+	}
+	
 	@Override
 	public String toString() {
 		return "\n"+getFirstName()+" "+getLastName()+" : \n"
