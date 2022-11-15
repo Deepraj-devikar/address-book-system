@@ -99,6 +99,7 @@ public class AddressBookMain {
 		System.out.print("How many persons details you have to add : ");
 		int numberOfPerson = readNumber();
 		System.out.println("Enter "+numberOfPerson+" person details: ");
+		AddressBook addressBookForAddAddresses = addressBooks.get(addressBookName);
 		for (int number = 1; number <= numberOfPerson; number++) {
 			System.out.println("");
 			System.out.println("Person "+number+" : ");
@@ -108,12 +109,13 @@ public class AddressBookMain {
 				// if contact details with first name and last name is already found in address book 
 				// then it will give DuplicateContactException
 				readPersonDetails();
-				Person addContact = addressBooks.get(addressBookName).addContact(firstName, lastName);
+				Person addContact = addressBookForAddAddresses.addContact(firstName, lastName);
 				setContactDetails(addContact);
 			} catch (DuplicateContactException e) {
 				System.out.println(e);
 			}	
 		}
+		addressBookForAddAddresses.writeDataToFile();
 	}
 	
 	public ArrayList<Person> getPersonsListByAreaName(Hashtable<String, ArrayList<Person>> personsInArea, String areaName) {
@@ -199,7 +201,8 @@ public class AddressBookMain {
 		// Read person first name and last name
 		readPersonDetails();
 		// Read contact details with person first name and last name and edit that details in address book
-		Person editContact = addressBooks.get(addressBookName).getContact(firstName, lastName);
+		AddressBook toEditAddressBook = addressBooks.get(addressBookName);
+		Person editContact = toEditAddressBook.getContact(firstName, lastName);
 		if(editContact != null) {
 			// edit persons contact details this function can give ContactNotFoundException if persons contact details not found in address book
 			boolean isEdited = true;
@@ -219,6 +222,7 @@ public class AddressBookMain {
 			default:
 				isEdited = false;
 			}
+			toEditAddressBook.writeDataToFile();
 			System.out.println("Contact details "+(isEdited ? "" : "not ")+"edited");
 		} else {
 			System.out.println("Contact detail not found");
@@ -248,7 +252,9 @@ public class AddressBookMain {
 		// Read person first name and last name
 		readPersonDetails();
 		// Delete that details in address book
-		addressBooks.get(addressBookName).deleteContact(firstName, lastName);
+		AddressBook addressBookToDeleteAddresses = addressBooks.get(addressBookName);
+		addressBookToDeleteAddresses.deleteContact(firstName, lastName);
+		addressBookToDeleteAddresses.writeDataToFile();
 	}
 	
 	public int sortOption() {
@@ -352,7 +358,8 @@ public class AddressBookMain {
 		// Makes address book according to name
 		System.out.print("Enter name for address book : ");
 		String addressBookName = scanner.nextLine();
-		addressBooks.put(addressBookName, new AddressBook());
+		AddressBook tempAddressBook = new AddressBook(addressBookName);
+		addressBooks.put(addressBookName, tempAddressBook);
 		addAddressesToAddressBook(addressBookName);
 	}
 	

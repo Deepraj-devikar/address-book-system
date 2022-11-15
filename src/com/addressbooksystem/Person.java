@@ -115,6 +115,6 @@ public class Person {
 				+getAddress()+", \n"
 				+getCity()+", "+getState()+" - "+getZip()+"\n"
 				+getPhoneNumber()+"\n"
-				+getEmail()+"\n\n";
+				+getEmail()+"\n";
 	}
 }

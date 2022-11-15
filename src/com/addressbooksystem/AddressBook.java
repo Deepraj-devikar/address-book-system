@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class AddressBook {
-	public ArrayList<Person> contacts = new ArrayList<Person>();
+	public ArrayList<Person> contacts;
+	String addressBookName;
 	
+	public AddressBook(String name) {
+		contacts = new ArrayList<Person>();
+		addressBookName = name;
+	}
 	/**
 	 * add contact to contacts of address book with first name and last name
 	 * and return that contact which type is person to set further information
@@ -88,5 +93,11 @@ public class AddressBook {
 		if(contact != null) {
 			contacts.remove(contact);
 		}
+	}
+	
+	public void writeDataToFile() {
+		AddressBookFileIOService addressBookFileIOService = new AddressBookFileIOService(addressBookName);
+		addressBookFileIOService.writeData(contacts);
+		addressBookFileIOService = null;
 	}
 }
