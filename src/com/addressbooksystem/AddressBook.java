@@ -100,4 +100,10 @@ public class AddressBook {
 		addressBookFileIOService.writeData(contacts);
 		addressBookFileIOService = null;
 	}
+	
+	public void readDataFromFile() {
+		AddressBookFileIOService addressBookFileIOService = new AddressBookFileIOService(addressBookName);
+		contacts = addressBookFileIOService.readData();
+		addressBookFileIOService = null;
+	}
 }

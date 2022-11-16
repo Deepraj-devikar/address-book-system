@@ -359,6 +359,7 @@ public class AddressBookMain {
 		System.out.print("Enter name for address book : ");
 		String addressBookName = scanner.nextLine();
 		AddressBook tempAddressBook = new AddressBook(addressBookName);
+		tempAddressBook.readDataFromFile();
 		addressBooks.put(addressBookName, tempAddressBook);
 		addAddressesToAddressBook(addressBookName);
 	}
