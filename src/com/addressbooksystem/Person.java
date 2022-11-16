@@ -1,7 +1,30 @@
 package com.addressbooksystem;
 
+import com.opencsv.bean.CsvBindByName;
+
 public class Person {
-	private String firstName, lastName, address, city, state, zip, phoneNumber, email;
+	@CsvBindByName(column = "firstName", required = true)
+	private String firstName;
+	@CsvBindByName(column = "lastName", required = true)
+	private String lastName;
+	@CsvBindByName(column = "address")
+	private String address;
+	@CsvBindByName(column = "city")
+	private String city;
+	@CsvBindByName(column = "state")
+	private String state;
+	@CsvBindByName(column = "zip")
+	private String zip;
+	@CsvBindByName(column = "phoneNumber")
+	private String phoneNumber;
+	@CsvBindByName(column = "email")
+	private String email;
+	
+	/*
+	 * No argument constructor
+	 */
+	public Person() {
+	}
 	
 	/**
 	 * 
