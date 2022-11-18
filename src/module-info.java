@@ -6,5 +6,6 @@ module AddressBookSystem {
 	requires commons.beanutils;
 	requires commons.logging;
 	requires java.sql;
+	requires gson;
 	exports com.addressbooksystem;
 }

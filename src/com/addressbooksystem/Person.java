@@ -1,30 +1,14 @@
 package com.addressbooksystem;
 
-import com.opencsv.bean.CsvBindByName;
-
 public class Person {
-	@CsvBindByName(column = "firstName", required = true)
 	private String firstName;
-	@CsvBindByName(column = "lastName", required = true)
 	private String lastName;
-	@CsvBindByName(column = "address")
 	private String address;
-	@CsvBindByName(column = "city")
 	private String city;
-	@CsvBindByName(column = "state")
 	private String state;
-	@CsvBindByName(column = "zip")
 	private String zip;
-	@CsvBindByName(column = "phoneNumber")
 	private String phoneNumber;
-	@CsvBindByName(column = "email")
 	private String email;
-	
-	/*
-	 * No argument constructor
-	 */
-	public Person() {
-	}
 	
 	/**
 	 * 
@@ -41,7 +25,51 @@ public class Person {
 		this.phoneNumber = "";
 		this.email = "";
 	}
-
+	
+	public Person(CSVPerson person) {
+		if(person.getFirstName().trim() != "" && person.getLastName().trim() != "") {
+			this.firstName = person.getFirstName();
+			this.lastName = person.getLastName();
+			this.address = person.getAddress();
+			this.city = person.getCity();
+			this.state = person.getState();
+			this.zip = person.getZip();
+			this.phoneNumber = person.getPhoneNumber();
+			this.email = person.getEmail();
+		} else {
+			this.firstName = "NULL";
+			this.lastName = "NULL";
+			this.address = "NULL";
+			this.city = "NULL";
+			this.state = "NULL";
+			this.zip = "NULL";
+			this.phoneNumber = "NULL";
+			this.email = "NULL";
+		}
+	}
+	
+	public Person(JSONPerson person) {
+		if(person.firstName.trim() != "" && person.lastName != "") {
+			this.firstName = person.firstName;
+			this.lastName = person.lastName;
+			this.address = person.address;
+			this.city = person.city;
+			this.state = person.state;
+			this.zip = person.zip;
+			this.phoneNumber = person.phoneNumber;
+			this.email = person.email;
+		} else {
+			this.firstName = "NULL";
+			this.lastName = "NULL";
+			this.address = "NULL";
+			this.city = "NULL";
+			this.state = "NULL";
+			this.zip = "NULL";
+			this.phoneNumber = "NULL";
+			this.email = "NULL";
+		}
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -139,5 +167,31 @@ public class Person {
 				+getCity()+", "+getState()+" - "+getZip()+"\n"
 				+getPhoneNumber()+"\n"
 				+getEmail()+"\n";
+	}
+	
+	public CSVPerson getCSVPerson() {
+		CSVPerson csvPerson = new CSVPerson();
+		csvPerson.setFirstName(firstName);
+		csvPerson.setLastName(lastName);
+		csvPerson.setAddress(address);
+		csvPerson.setCity(city);
+		csvPerson.setState(state);
+		csvPerson.setZip(zip);
+		csvPerson.setPhoneNumber(phoneNumber);
+		csvPerson.setEmail(email);
+		return csvPerson;
+	}
+	
+	public JSONPerson getJSONPerson() {
+		JSONPerson jsonPerson = new JSONPerson();
+		jsonPerson.firstName = firstName;
+		jsonPerson.lastName = lastName;
+		jsonPerson.address = address;
+		jsonPerson.city = city;
+		jsonPerson.state = state;
+		jsonPerson.zip = zip;
+		jsonPerson.phoneNumber = phoneNumber;
+		jsonPerson.email = email;
+		return jsonPerson;
 	}
 }

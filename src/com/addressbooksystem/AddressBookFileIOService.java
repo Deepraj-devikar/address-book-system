@@ -1,5 +1,8 @@
 package com.addressbooksystem;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -8,14 +11,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 public class AddressBookFileIOService {
 	private final String HOME_DIRECTORY_PATH = "E:\\bridgelabz\\data"; 
@@ -71,11 +75,8 @@ public class AddressBookFileIOService {
 	
 	public void writeData(ArrayList<Person> contacts) {
 		writeDataToTextFile(contacts);
-		try {
-			writeDataToCSVFile(contacts);
-		} catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException | IOException exception) {
-			System.out.println("Unable to write contact persons information to CSV file. exception is : "+exception+".");
-		}
+		writeDataToCSVFile(contacts);
+		writeDataToJSONFile(contacts);
 	}
 	
 	/**
@@ -94,7 +95,7 @@ public class AddressBookFileIOService {
 				try {
 					Files.write(filePath, personInformation.toString().getBytes());
 					System.out.println(contacts.size()+" contact persons information written to text file "+filePath.toString()+" file.");
-				} catch (IOException exception) {
+				} catch (Exception exception) {
 					System.out.println("Unable to write contact persons information to "+filePath.toString()+" file.");
 					System.out.println("Exception is : "+exception);
 				}	
@@ -106,48 +107,76 @@ public class AddressBookFileIOService {
 	 * write persons data to CSV file
 	 * 
 	 * @param personData
-	 * @throws IOException 
-	 * @throws CsvRequiredFieldEmptyException 
-	 * @throws CsvDataTypeMismatchException 
 	 */
 	public void writeDataToCSVFile(ArrayList<Person> contacts) 
-			throws IOException, 
-			CsvDataTypeMismatchException, 
-			CsvRequiredFieldEmptyException {
+			 {
 		if(isValidDirectory(Paths.get(HOME_DIRECTORY_PATH + "\\" + addressBookName))) {
 			Path filePath = Paths.get(HOME_DIRECTORY_PATH + "\\" + addressBookName + "\\data.csv");
 			try(
 					Writer writer = Files.newBufferedWriter(filePath)
 					){
-				StatefulBeanToCsv<Person> beanToCSV = new StatefulBeanToCsvBuilder<Person>(writer)
+				
+				StatefulBeanToCsv<CSVPerson> beanToCSV = new StatefulBeanToCsvBuilder<CSVPerson>(writer)
 						.withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
 						.build();
 				
-				
-				beanToCSV.write(contacts);
-				System.out.println(contacts.size()+" contact persons information written to csv file "+filePath.toString()+" file");
-			} catch (IOException exception) {
+				ArrayList<CSVPerson> persons = new ArrayList<CSVPerson>(contacts
+						.stream()
+						.map(tempPerson -> tempPerson.getCSVPerson())
+						.collect(Collectors.toList()));
+				beanToCSV.write(persons);
+				writer.close();
+				System.out.println(contacts.size()+" contact persons information written to CSV file "+filePath.toString()+" file");
+			} catch (Exception exception) {
 				System.out.println("Unable to write contact persons information to "+filePath.toString()+" file");
 				System.out.println("Exception is : "+exception);
 			}
 		}
 	}
 	
+	/**
+	 * write persons data to JSON file
+	 * 
+	 * @param personData
+	 */
+	public void writeDataToJSONFile(ArrayList<Person> contacts) {
+		if(isValidDirectory(Paths.get(HOME_DIRECTORY_PATH + "\\" + addressBookName))) {
+			String filePathString = HOME_DIRECTORY_PATH + "\\" + addressBookName + "\\data.json";
+			Path filePath = Paths.get(filePathString);
+			if(isValidFilePath(filePath)) {
+				try {
+					Gson gson = new Gson();
+					ArrayList<JSONPerson> persons = new ArrayList<JSONPerson>(contacts
+							.stream()
+							.map(tempPerson -> tempPerson.getJSONPerson())
+							.collect(Collectors.toList()));
+					String json = gson.toJson(persons);
+					
+					FileWriter writer = new FileWriter(filePathString);
+					writer.write(json);
+					writer.close();
+					System.out.println(contacts.size()+" contact persons information written to JSON file "+filePath.toString()+" file");
+				} catch (Exception exception) {
+					System.out.println("Unable to write contact persons information to "+filePath.toString()+" file.");
+					System.out.println("Exception is : "+exception);
+				}
+			}
+		}
+	}
+	
 	public ArrayList<Person> readData(){
 		ArrayList<Person> contacts = new ArrayList<Person>();
-		switch((int) Math.floor(Math.random() * 10) % 2) {
+		switch((int) Math.floor(Math.random() * 10) % 3) {
 		case 0:
 			contacts = readDataFromTextFile();
 			break;
 		case 1:
-			try {
-				contacts = readDataFromCSVFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			contacts = readDataFromCSVFile();
+			break;
+		case 2:
+			contacts = readDataFromJSONFile();	
 			break;
 		}
-		
 		return contacts;
 	}
 	
@@ -199,9 +228,9 @@ public class AddressBookFileIOService {
 						lineCountFromStart = -1;
 					}
 				}
-			} catch (IOException e) {
+			} catch (Exception exception) {
 				System.out.println("Unable to read contacts from file "+filePath);
-				System.out.println("Exception is "+e);
+				System.out.println("Exception is "+exception);
 			}	
 		} else {
 			System.out.println(filePath+" not exists");
@@ -245,22 +274,63 @@ public class AddressBookFileIOService {
 		return contacts;
 	}
 	
-	public ArrayList<Person> readDataFromCSVFile() throws IOException{
+	public ArrayList<Person> readDataFromCSVFile(){
 		ArrayList<Person> contacts = new ArrayList<Person>();
 		if(isValidDirectory(Paths.get(HOME_DIRECTORY_PATH + "\\" + addressBookName))) {
 			Path filePath = Paths.get(HOME_DIRECTORY_PATH + "\\" + addressBookName + "\\data.csv");
-			try(
-					Reader reader = Files.newBufferedReader(filePath);
-					){
-				CsvToBean<Person> csvToBean = new CsvToBeanBuilder(reader).
-						withType(Person.class).
-						withIgnoreLeadingWhiteSpace(true).build();
-				
-				Iterator<Person> csvUserIterator = csvToBean.iterator();
-				while(csvUserIterator.hasNext()) {
-					contacts.add(csvUserIterator.next());
+			if(Files.exists(filePath)) {
+				try (
+						Reader reader = Files.newBufferedReader(filePath);
+						) {
+
+					CsvToBean<CSVPerson> csvToBean = new CsvToBeanBuilder<CSVPerson>(reader)
+		                    .withType(CSVPerson.class)
+		                    .withIgnoreLeadingWhiteSpace(true)
+		                    .build();
+					reader.close();
+		            List<CSVPerson> persons = csvToBean.parse();
+		            persons.forEach(person -> contacts.add(new Person(person)));
+		            System.out.println("data found in "+filePath.toString()+" file : ");
+		    		System.out.println(contacts);
+				} catch (IOException exception) {
+					System.out.println("Unable to read contacts from file "+filePath);
+					System.out.println("Exception is "+exception);
 				}
+			} else {
+				System.out.println(filePath+" not exists");
 			}
+		} else {
+			System.out.println("data not exists.");
+		}
+		return contacts;
+	}
+	
+	public ArrayList<Person> readDataFromJSONFile(){
+		ArrayList<Person> contacts = new ArrayList<Person>();
+		if(isValidDirectory(Paths.get(HOME_DIRECTORY_PATH + "\\" + addressBookName))) {
+			String filePathString = HOME_DIRECTORY_PATH + "\\" + addressBookName + "\\data.json";
+			Path filePath = Paths.get(filePathString);
+			if(Files.exists(filePath)) {
+				try(
+						BufferedReader bufferedReader = new BufferedReader(new FileReader(filePathString));
+						){
+					Gson gson = new Gson();
+					JSONPerson[] personObjects = gson.fromJson(bufferedReader, JSONPerson[].class);
+					bufferedReader.close();
+					for(int personIndex = 0; personIndex < personObjects.length; personIndex++) {
+						contacts.add(new Person(personObjects[personIndex]));
+					}
+					System.out.println("data found in "+filePath.toString()+" file : ");
+		    		System.out.println(contacts);
+				} catch(Exception exception) {
+					System.out.println("Unable to read contacts from file "+filePath);
+					System.out.println("Exception is "+exception);
+				}
+			} else {
+				System.out.println(filePath+" not exists");
+			}
+		} else {
+			System.out.println("data not exists.");
 		}
 		return contacts;
 	}
